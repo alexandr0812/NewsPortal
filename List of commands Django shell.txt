@@ -1,0 +1,94 @@
+Импорт
+from django.contrib.auth.models import User
+from news.models import Author, Category, Post, PostCategory, Comment
+
+Первое задание
+user1 = User.objects.create_user('Александр')
+user2 = User.objects.create_user('Дмитрий')
+
+Второе задание
+author1 = Author.objects.create(user=user1)
+author2 = Author.objects.create(user=user2)
+
+Третье задание
+category1 = Category.objects.create(name='Технологии')
+category2 = Category.objects.create(name='Здоровье')
+category3 = Category.objects.create(name='Спорт')
+category4 = Category.objects.create(name='Образование')
+
+Четвертое и пятое задания
+author = Author.objects.get(id=1)
+article1 = Post.objects.create(author=author, post_type='AR', title='Статья №1', text='Текст первой статьи')
+article1.categories.add(category1)
+author = Author.objects.get(id=2)
+article2 = Post.objects.create(author=author, post_type='AR', title='Статья №2', text='Текст второй статьи')
+article2.categories.add(category2, category3)
+author = Author.objects.get(id=1)
+news1 = Post.objects.create(author=author, post_type='NW', title='Новость №1', text='Текст первой новости')
+news1.categories.add(category1, category2, category4)
+
+Шестое задание
+comment1 = Comment.objects.create(post=article1, users=user2, text='Замечательная статья. Теперь это мой любимый автор!')
+comment2 = Comment.objects.create(post=news1, users=user2, text='Теперь этот автор пишет еще и новости, я восхищен!')
+comment3 = Comment.objects.create(post=article1, users=user1, text='Благодарю! Надеюсь вы и дальше будете следить за моими статьями)')
+comment4 = Comment.objects.create(post=article2, users=user1, text='Очень подробная, образовательная статья')
+
+Седьмое задание
+article1.like()
+article1.dislike()
+article1.like()
+article2.like()
+article2.like()
+news1.like()
+news1.like()
+news1.dislike()
+comment1.like()
+comment1.dislike()
+comment2.like()
+comment2.like()
+comment3.like()
+comment4.dislike()
+comment4.dislike()
+comment4.like()
+
+Восьмое задание
+user = User.objects.get(id=1)
+author = user.author
+author.update_rating()
+user = User.objects.get(id=2)
+author = user.author
+author.update_rating()
+
+Девятое задание
+best_author = Author.objects.order_by('-rating').first()
+if best_author:
+    username = best_author.user.username
+    rating = best_author.rating
+    print(f"Лучший пользователь: {username}, Рейтинг: {rating}")
+else:
+    print("Нет авторов в системе.")
+
+Десятое задание
+best_article = Post.objects.filter(post_type='AR').order_by('-rating').first()
+if best_article:
+    article_info = {
+        'created_at': best_article.created_at,
+        'username': best_article.author.user.username,
+        'rating': best_article.rating,
+        'title': best_article.title,
+        'preview': best_article.text[:124]
+    }
+    print(article_info)
+else:
+    print("Нет статей.")
+
+Одиннадцатое задание
+comments = best_article.comments.all()
+for comment in comments:
+    comment_date = comment.created_at
+    comment_user = comment.users.username
+    comment_rating = comment.rating
+    comment_text = comment.text
+    print(f"Комментарий: Дата: {comment_date}, Пользователь: {comment_user}, Рейтинг: {comment_rating}, Текст: {comment_text}")
+else:
+    print("Нет статей для отображения.")
