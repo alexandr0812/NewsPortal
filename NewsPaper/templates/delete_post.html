@@ -1,0 +1,30 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+Delete post
+{% endblock title %}
+
+{% block content %}
+
+      <h1>Удаление публикации:</h1><br>
+      <hr>
+
+    <h2>{{ post.title|censor }}</h2>
+    <span>{{ post.text|censor }}<br></span>
+    <hr>
+        {% for key, value in post.POST_TYPE_CHOICES %}
+            {% if key == post.post_type %}
+                <span><b>{{value}}</b>,</span>
+            {% endif %}
+        {% endfor %}
+    <h3>Подтвердите удаление публикации:</h3>
+
+    <form method="POST">
+    {% csrf_token %}
+    <input type="submit" class="btn btn-secondary" value="подтвердить">
+    </form>
+    <input type=button value="Назад" class="btn btn-secondary" onClick="javascript:history.go(-1);">
+
+
+{% endblock content %}

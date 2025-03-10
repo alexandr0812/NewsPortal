@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from .resources import POST_TYPE_CHOICES, ARTICLE
 
 
-
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='author')
     rating = models.IntegerField(default=0)
@@ -58,6 +57,9 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.text.title()}: {self.title[:20]}'
+
+    def get_absolute_url(self):
+        return f'/news/{self.id}'
 
 
 class PostCategory(models.Model):

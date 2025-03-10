@@ -1,0 +1,80 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+{% load custom_tags %}
+
+
+{% block title %}
+Search
+{% endblock title %}
+
+{% block content %}
+
+    <h1>Поиск публикаций:</h1>
+            <form method="GET">
+            <div style="float:left; width:75%; height:45px; line-height:20px">
+
+                <label for="created_at">Начиная с даты:</label>
+                <input type="date" id="created_at" name="created_at__gt">
+
+                <label for="title">По названию:</label>
+                <input type="text" id="title" name="title__icontains">
+
+                <label for="author">По автору:</label>
+                <select name="author" id="author">
+                    <option value="0">---------</option>
+                    <option value="1">Александр</option>
+                    <option value="2">Дмитрий</option>
+                </select>
+            </div>
+            <div style="float:left; width:25%; height:45px; line-height:35px">
+                <button type="submit" class="btn btn-secondary">Найти</button>
+            </div>
+            </form>
+        <p>Общее количество новостей: {{ post_search|length }}</p>
+        <hr>
+
+        {% if post_search %}
+            {% for newnews in object_list %}
+            {% autoescape off %}
+            <a href="{{ newnews.id }}"><b>{{ newnews.title|censor }}</b></a><br>
+            {% endautoescape %}
+            {% for key, value in newnews.CATEGORY_CHOICES %}
+                {% if key == newnews.categoryType %}
+                    <span><b>{{value}}</b>,</span>
+                {% endif %}
+            {% endfor %}
+            <span>Автор: ({{ newnews.author }})</span><br>
+            {% endfor %}
+
+        {% else %}
+            <h2>По заданным параметрам поиска публикаций нет!</h2>
+        {% endif %}
+    <hr>
+
+{% if is_paginated %}
+<span>Страницы: </span>
+  {% if page_obj.has_previous %}
+    <a href="?{% param_replace page=1 %}">Первая</a><span>&nbsp;</span>
+    <a href="?{% param_replace page=page_obj.previous_page_number %}"><</a>
+  {% endif %}
+
+{% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num %}
+<a><b>{{ page_obj.number }}</b></a><span>&nbsp;</span>
+    {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
+        <a href="?{% param_replace page=num %}">{{ num }}</a><span>&nbsp;</span>
+    {% endif %}
+{% endfor %}
+
+  {% if page_obj.has_next %}
+    <a href="?{% param_replace page=page_obj.next_page_number %}">></a><span>&nbsp;</span>
+    <a href="?{% param_replace page=paginator.num_pages %}">Последняя</a>
+  {% endif %}
+
+  <span style ="color: grey;">&nbsp;&nbsp;(Показаны публикации с {{ page_obj.start_index }} по {{ page_obj.end_index }})</span>
+{% endif %}
+
+<input type=button value="Назад" class="btn btn-secondary" onClick="javascript:history.go(-1);">
+
+
+{% endblock content %}

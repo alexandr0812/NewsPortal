@@ -1,0 +1,21 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+Create post
+{% endblock title %}
+
+{% block content %}
+
+      <h1>Новая публикация</h1><br>
+      <hr>
+
+	<form method="post">
+		{% csrf_token %}
+        {{ form.as_p }}
+        <br>
+		<input class="btn btn-secondary" type="submit" value="Сохранить">
+	</form>
+    <input type=button value="Назад" class="btn btn-secondary" onClick="javascript:history.go(-1);">
+
+{% endblock content %}
